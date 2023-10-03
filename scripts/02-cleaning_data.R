@@ -51,8 +51,8 @@ cleaned_data$occ_month |> as.numeric() |> max() <= 12
 cleaned_data$occ_month |> as.numeric() |> min() >= 1
 
 
-# Check that the difference in days between the occurrence date and report date is positive
-cleaned_data$difference |> min() <= 0
+# Check that the difference in days between the occurrence date and report date is non-negative
+cleaned_data$difference |> min() >= 0
 
 
 
