@@ -29,6 +29,8 @@ cleaned_data <-
                          occ_month = as.character(month(occ_date))) |>
   # filter to get thefts of which occurrence year between 2014 and 2022
   filter(occ_year >= 2014 & occ_year <= 2022) |>
+  # filter to get reported date within one year of occurrence date
+  filter(difference <= 365) |>
   # make the numerical occurrence year as a character
   mutate(occ_year = as.character(occ_year)) |>
   # rename columns to be more readable
@@ -51,8 +53,9 @@ cleaned_data$occ_month |> as.numeric() |> max() <= 12
 cleaned_data$occ_month |> as.numeric() |> min() >= 1
 
 
-# Check that the difference in days between the occurrence date and report date is non-negative
+# Check that the difference in days between the occurrence date and report date are all between 0 and 365
 cleaned_data$difference |> min() >= 0
+cleaned_data$difference |> max() <= 365
 
 
 
@@ -67,3 +70,4 @@ cleaned_data$bicycle_status |> class() == "character"
 
 #### Save data ####
 write_csv(cleaned_data, "outputs/data/cleaned_bicycle_theft.csv")
+
