@@ -11,14 +11,14 @@ library(opendatatoronto)
 library(tidyverse)
 
 #### Download data ####
-# The package has multiple datasets with different file type and updated date
+# The package has multiple datasets with different file type and modified date.
 # We choose the most up-to-date version and a csv file.
-# Use head() to review the dataset id we want
-raw_data <- list_package_resources("c7d34d9b-23d2-44fe-8b3b-cd82c8b38978") |>
+# Use head() to review the dataset id we want.
+bicycle_theft <- list_package_resources("c7d34d9b-23d2-44fe-8b3b-cd82c8b38978") |>
   filter(id == "55136dac-26b1-4028-b9f5-7c2344f94153") |>
   get_resource()
 
 
 
 #### Save data ####
-write_csv(raw_data, "inputs/data/raw_data.csv") 
+write_csv(bicycle_theft, "inputs/data/bicycle_theft.csv") 
