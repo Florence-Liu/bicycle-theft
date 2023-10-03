@@ -12,23 +12,84 @@ number-sections: true
 bibliography: references.bib
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
-```{r}
-1 + 1
-```
-
-You can add options to executable code like this
-
 ```{r}
 #| echo: false
-2 * 2
+#| message: false
+#| warning: false
+
+
+#### Workspace setup ####
+library(tidyverse)
+library(knitr)
+
+#### Read in the cleaned data ####
+data <- read_csv(here::here("outputs/data/cleaned_bicycle_theft.csv"), show_col_types = FALSE)
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+# Introduction
+
+You can and should cross-reference sections and sub-sections.
+
+The remainder of this paper is structured as follows. @sec-data....
+
+# Data {#sec-data}
+
+
+```{r}
+#| label: fig-bills
+#| fig-cap: Bills of penguins
+#| echo: false
+
+data |> group_by(occ_year) |> summarise(total = n()) |> kable()
+```
+
+Some of our data is of penguins (@fig-bills), from @palmerpenguins.
+
+```{r}
+#| label: fig-bills
+#| fig-cap: Bills of penguins
+#| echo: false
+
+data |> ggplot(aes(x=occ_year, fill=location)) +
+  geom_bar()
+
+```
+
+Talk more about it.
+
+And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
+
+```{r}
+#| label: fig-planes
+#| fig-cap: Relationship between wing length and width
+#| echo: false
+#| warning: false
+#| message: false
+
+data |> ggplot(aes(x=occ_year, fill=bicycle_status)) +
+  geom_bar()
+```
+
+```{r}
+#| label: fig-planes
+#| fig-cap: Relationship between wing length and width
+#| echo: false
+#| warning: false
+#| message: false
+
+data |> filter(difference <= 100) |> 
+  ggplot(aes(x=occ_year, y=difference, color=occ_month)) +
+  geom_point()
+```
+```{r}
+#| label: fig-bills
+#| fig-cap: Bills of penguins
+#| echo: false
+
+data |> group_by(occ_month) |> summarise(total = n()) |> kable()
+
+```
+
+\newpage
+
+# References
