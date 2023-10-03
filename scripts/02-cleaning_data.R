@@ -29,7 +29,7 @@ cleaned_data <-
                          occ_month = as.character(month(occ_date))) |>
   # filter to get thefts of which occurrence year between 2014 and 2022
   filter(occ_year >= 2014 & occ_year <= 2022) |>
-  # make the numerical occurrence yeaer as a character
+  # make the numerical occurrence year as a character
   mutate(occ_year = as.character(occ_year)) |>
   # rename columns to be more readable
   rename(location = premises_type, bicycle_status = status) |>
