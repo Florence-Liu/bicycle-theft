@@ -1,5 +1,5 @@
 #### Preamble ####
-# Purpose: Downloads and saves the data about Bicycle Theft in Toronto from opendatatoronto
+# Purpose: Downloads the data about Bicycle Theft in Toronto from OpenDataToronto
 # Author: Yufei Liu
 # Date: 2 Oct 2023
 # Contact: florence.liu@mail.utoronto.ca
