@@ -19,14 +19,13 @@ cleaned_data <-
   raw_data |>
   janitor::clean_names() |> # to make variables name easier to read
   # select our variable of interest
-  select(occ_year, occ_date, report_date, premises_type, status) |> 
+  select(occ_year, occ_date, occ_month, report_date, premises_type, status) |> 
   tidyr::drop_na()
 
 cleaned_data <- 
   # add a new column showing the difference in days between the report date and occurrence date
   # add a new column showing the numerical expression of occurrence month as a character
-  cleaned_data |> mutate(difference = as.numeric(report_date - occ_date),
-                         occ_month = as.character(month(occ_date))) |>
+  cleaned_data |> mutate(difference = as.numeric(report_date - occ_date)) |>
   # filter to get thefts of which occurrence year between 2014 and 2022
   filter(occ_year >= 2014 & occ_year <= 2022) |>
   # filter to get reported date within one year of occurrence date
@@ -49,8 +48,9 @@ cleaned_data$occ_year |> as.numeric() |> min() >= 2014
 
 
 # Check that occurrence_month are all between 1 and 12
-cleaned_data$occ_month |> as.numeric() |> max() <= 12
-cleaned_data$occ_month |> as.numeric() |> min() >= 1
+cleaned_data$occ_month |> unique() |> sort() == c("April","August","December","February",
+                                                 "January","July","June","March",    
+                                                 "May","November","October","September")
 
 
 # Check that the difference in days between the occurrence date and report date are all between 0 and 365
