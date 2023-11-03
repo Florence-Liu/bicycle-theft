@@ -1,10 +1,10 @@
 ---
-title: "Public security, law enforcement, and bicycle theft in Toronto"
+title: "Public Security Concern: Bicycle Theft in Toronto Shows a Seasonal and Geographical Pattern"
 author: "Yufei Liu"
 thanks: "Code and data are available at: https://github.com/Florence-Liu/bicycle-theft"
-date: "`r Sys.time()`"
-date-format: " MMMM YYYY"
-abstract: "Bicycle theft has been a perennial issue for city safety in Toronto. The analysis is conducted based on data on opendatatoronto portal including occurrence date and details about Bicycle Thefts occurrences reported to Toronto Police Service. There exists a decreasing trend and low recovery rates in overall offences in recent years even people tend to report immediately, a seasonal pattern that more offences occurred in summer, and a geographical pattern that outdoor bicycle thefts decreased. It implies possible ineffectiveness of tracking and security management, and further work could look at influencing factors contributing to the patterns."
+date: today
+date-format: long
+abstract: "Bicycle theft has been a serious issue for city safety in Toronto. The analysis uses data on opendatatoronto portal including occurrence date and details about Bicycle Thefts occurrences reported to Toronto Police Service. We find a decreasing trend and low recovery rates in overall offences in recent years even people tend to report immediately, a seasonal pattern that more offences occurred in summer, and a geographical pattern that outdoor bicycle thefts decreased. It implies possible ineffectiveness of tracking and security management, and further work could look at influencing factors contributing to the patterns."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -12,7 +12,7 @@ bibliography: references.bib
 
 # Introduction
 
-Cycling is one of the most popular transportation methods and relaxing activities in Toronto and contributes to reducing traffic congestion. The City of Toronto is working to support cycling by building infrastructures, such as bike lanes and bike parking facilities, and create a cycling-friendly environment [@citeThecity]. However, together with the prevalence of cycling, bicycle theft became a major concern for cyclists and a perennial problem for the city safety in Toronto.
+Cycling is one of the most popular transportation methods and relaxing activities in Toronto and contributes to reducing traffic congestion. The City of Toronto supports cycling by building infrastructures, such as bike lanes and bike parking facilities, and create a cycling-friendly environment [@citeThecity]. However, together with the prevalence of cycling, bicycle theft became a major concern for cyclists and the city safety in Toronto.
 
 In this paper, we use R [@citeR] to analyze `bicycle thefts` dataset [@citeData] in `opendatatoronto` package [@citeOpendatatoronto] to discover any potential time and geographical patterns in bicycle theft occurrence in Toronto from 2014 to 2022. We explore time and location variables as well as recovery rate and report habit through bar plots, scatter plots, and tables. We find that the overall occurrence of bicycle theft in Toronto decreased in recent years with a potential seasonal pattern that more thefts occurred in summer, and a geographical pattern that outdoor thefts decreased, along with relatively law recovery rates and immediate report habit. Biases exist in the dataset and may influence some analysis. Further work could explore possible reasons behind the patterns combining with other dataset.
 
@@ -22,11 +22,10 @@ The remainder of this paper is structured as follows: @sec-data discusses the da
 
 ## Data introduction  {#sec-data_introduction}
 
-The dataset used in this analysis was obtained from Toronto's Open Data Portal and can be accessed from the package `opendatatoronto` [@citeOpendatatoronto]. The dataset `Bicycle Thefts` includes all bicycle theft occurrences reported to the Toronto Police Service from 2014 to 2022, including detailed information about the offence such as location, bike basic information, etc [@citeData]. The dataset has been modified several times to update the data, and in this analysis, we will use the latest `csv` version refreshed on Apr 4, 2023.
+The dataset used in this analysis was obtained from Toronto's Open Data Portal and can be accessed from the package `opendatatoronto` [@citeOpendatatoronto]. The dataset `Bicycle Thefts` includes all bicycle theft occurrences reported to the Toronto Police Service from 2014 to 2022 [@citeData]. We use the latest `csv` version refreshed on Apr 4, 2023 in this analysis.
 
-Due to privacy consideration, Toronto Police Service has artificially blurred the detailed location of occurrence in this data to protect parties involved and locations were offset to the nearest road intersection [@citeData]. In this case, the accuracy of location may be impacted and become less informative.
 
-Since the occurrence of bicycle theft was self-reported, the reporter may choose to hide or inaccurately report some information such as detailed information about the bike due to privacy consideration as lost properties are not actively investigated by the Toronto Police Service and reports are only used for records purposes[@citeTorontopoliceservice]. It is also possible that people forget the exact time of the occurrence and detailed information about the bike if things happened long time ago. All these factors contribute to the existence of reporting bias, and make our data biased and less accurate for some analysis.
+Since the occurrence of bicycle theft was self-reported, the reporter may choose to hide or inaccurately report some information and contributes to the reporting biases[@citeTorontopoliceservice]. Also, the location information is blurred due to privacy consideration.
 
 
 ## Data cleaning {#sec-data_cleaning}
