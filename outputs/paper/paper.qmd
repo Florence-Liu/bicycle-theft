@@ -16,51 +16,47 @@ Cycling is one of the most popular transportation methods and relaxing activitie
 
 In this paper, we use R [@citeR] to analyze `bicycle thefts` dataset [@citeData] in `opendatatoronto` package [@citeOpendatatoronto] to discover any potential time and geographical patterns in bicycle theft occurrence in Toronto from 2014 to 2022. We explore time and location variables as well as recovery rate and report habit through bar plots, scatter plots, and tables. We find that the overall occurrence of bicycle theft in Toronto decreased in recent years with a potential seasonal pattern that more thefts occurred in summer, and a geographical pattern that outdoor thefts decreased, along with relatively law recovery rates and immediate report habit. Biases exist in the dataset and may influence some analysis. Further work could explore possible reasons behind the patterns combining with other dataset.
 
-The remainder of this paper is structured as follows: @sec-data discusses the data with @sec-data_introduction includes basic information about data collection, and discussion about biases and ethical concerns about the data, @sec-data_cleaning includes packages used to clean the data and cleaning process with information about variables of interest, and @sec-data_analysis includes graphs and tables representing relationships between variables, and some discussions about implications.
+The remainder of this paper is structured as follows: @sec-data discusses the data with @sec-data_introduction includes basic information about data collection and cleaning results, and @sec-data_visualization includes graphs and tables representing relationships between variables and some discussions.
 
 # Data {#sec-data}
 
 ## Data introduction  {#sec-data_introduction}
 
-The dataset used in this analysis was obtained from Toronto's Open Data Portal and can be accessed from the package `opendatatoronto` [@citeOpendatatoronto]. The dataset `Bicycle Thefts` includes all bicycle theft occurrences reported to the Toronto Police Service from 2014 to 2022 [@citeData]. We use the latest `csv` version refreshed on Apr 4, 2023 in this analysis.
+The dataset used in this analysis was obtained from Toronto's Open Data Portal and can be accessed from the package `opendatatoronto` [@citeOpendatatoronto]. The dataset `Bicycle Thefts` includes all bicycle theft occurrences reported to the Toronto Police Service from 2014 to 2022 [@citeData]. Since the occurrence of bicycle theft was self-reported, there may exist reporting bias that the reporter may choose to hide or inaccurately report some information [@citeTorontopoliceservice]. Also, the location information is blurred due to privacy consideration.  We use the latest `csv` version refreshed on Apr 4, 2023 in this analysis.
 
 
-Since the occurrence of bicycle theft was self-reported, the reporter may choose to hide or inaccurately report some information and contributes to the reporting biases[@citeTorontopoliceservice]. Also, the location information is blurred due to privacy consideration.
 
-
-## Data cleaning {#sec-data_cleaning}
-
-We will use `R` to do the analysis in this report [@citeR]. After acquiring the dataset from package `opendatatoronto`[@citeOpendatatoronto], we used package `tidyverse`[@citeTidyverse] and package `janitor`[@citeJanitor] to clean the data and select variables for further analysis.
+We will use `R` to do the analysis in this report [@citeR]. After acquiring the dataset from package `opendatatoronto` [@citeOpendatatoronto], we used package `tidyverse` [@citeTidyverse] and package `janitor` [@citeJanitor] to clean the data and select variables for further analysis.
 
 We selected variables from the raw data [@citeData]:
 
-* occ_year: Year offence occurred
+* `occ_year`: Year offence occurred
 
-* occ_month: Month offence occurred
+* `occ_month`: Month offence occurred
 
-* occ_date: Date offence occurred
+* `occ_date`: Date offence occurred
 
-* report_date: Date offence reported
+* `report_date`: Date offence reported
 
-* premises_type: Premises type of offence
+* `premises_type`: Premises type of offence
 
-* status: Whether the bicycle is recovered, stolen, or unknown
+* `status`: Whether the bicycle is recovered, stolen, or unknown
 
 To analyze the relationship between occurrence date and report date of offence, we constructed a new numerical variable `difference` to represent the difference in days between the report date and occurrence date, and filter any offences whose difference is larger than 365, that means we will not analyze offence that is not reported within one year from the occurrence date. The number of offence that reports long time later is quite small and may not be representative due to possible inaccurate report information.
 
 After changing the type and name of some variables, filtering offence occurred between 2014 and 2022, and removing missing values, we selected our final variable for analysis:
 
-* occ_year: Year offence occurred
+* `occ_year`: Year offence occurred
 
-* occ_month: Month offence occurred
+* `occ_month`: Month offence occurred
 
-* difference: Difference in days between occurrence date and report date
+* `difference`: Difference in days between occurrence date and report date
 
-* location: Premises type of offence
+* `location`: Premises type of offence
 
-* bicycle_status: Whether the bicycle is recovered, stolen, or unknown
+* `bicycle_status`: Whether the bicycle is recovered, stolen, or unknown
 
-## Data analysis {#sec-data_analysis}
+## Data visualization {#sec-data_visualization}
 
 In the analysis, we will use package `knitr` [@citeKnitr], package `here` [@citeHere], and package `formattable` [@citeFormattable] to load the cleaned data and make figures and tables to explore relationship between variables.
 
@@ -88,16 +84,17 @@ data <- read_csv(here::here("outputs/data/cleaned_bicycle_theft.csv"),
 
 ```{r}
 #| label: fig-yearly_count_by_month
-#| fig-cap: Bar plot of monthly number of occurrence of bicycle theft in Toronto for each year from 2014 to 2022
+#| fig-cap: Monthly number of occurrence of bicycle theft in Toronto for each year from 2014 to 2022
 #| echo: false
 #| warning: false
 #| message: false
 
-data |> ggplot(aes(x=occ_year, fill=occ_month)) +
+data |> 
+  mutate(occ_month = factor(occ_month, levels = month.name)) |> 
+  ggplot(aes(x=as.factor(occ_year), fill=occ_month)) +
   geom_bar() +
   labs(x = "Occurrence Year", y = "Number of occurrence", fill = "Occurrence Month") +
-  scale_x_discrete() +
-  theme_classic()
+  theme_minimal()
 ```
 
 Other than seasonal pattern, @fig-location_count_by_year also demonstrates the relationship between the location type and number of bicycle theft for each year. It clearly shows that bicycles were mostly stolen when parked outside, and this aligns with common sense that outdoor parking is more vulnerable to theft. However, it is surprising that the second most common location for bicycle theft is apartment instead of house. Residents' transportation habits may be a possible reason that since apartments are usually located in the town center and close to public transportation stations, bicycles is a good choice for short trips. For residents in house, they may rather choose vehicles that are faster such as cars to commute.
@@ -108,7 +105,7 @@ It is noticeable that there are many reports with location type `Other`. Since i
 
 ```{r}
 #| label: fig-location_count_by_year
-#| fig-cap: Bar plot of number of occurrence of bicycle theft in difference type of location in Toronto for each year from 2014 to 2022.
+#| fig-cap: Number of bicycle theft in different type of location in Toronto for each year from 2014 to 2022.
 #| echo: false
 #| warning: false
 #| message: false
@@ -178,7 +175,6 @@ data |> group_by(occ_month) |>
   kable(col.names = c("Month", "Recovery Rate"))
 
 ```
-
 
 
 
