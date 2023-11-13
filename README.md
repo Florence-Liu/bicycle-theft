@@ -1,4 +1,4 @@
-# Public security, law enforcement, and bicycle theft in Toronto
+# Public Security Concern: Bicycle Theft in Toronto Shows a Seasonal and Geographical Pattern
 
 
 ## Overview
