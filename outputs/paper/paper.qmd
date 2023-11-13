@@ -16,7 +16,7 @@ Cycling is one of the most popular transportation methods and relaxing activitie
 
 In this paper, we use R [@citeR] to analyze `bicycle thefts` dataset [@citeData] in `opendatatoronto` package [@citeOpendatatoronto] to discover any potential time and geographical patterns in bicycle theft occurrence in Toronto from 2014 to 2022. We explore time and location variables as well as recovery rate and report habit through bar plots, scatter plots, and tables. We find that the overall occurrence of bicycle theft in Toronto decreased in recent years with a potential seasonal pattern that more thefts occurred in summer, and a geographical pattern that outdoor thefts decreased, along with relatively law recovery rates and immediate report habit. Biases exist in the dataset and may influence some analysis. Further work could explore possible reasons behind the patterns combining with other dataset.
 
-The remainder of this paper is structured as follows: @sec-data discusses the data with @sec-data_introduction includes basic information about data collection and cleaning results, and @sec-data_visualization includes graphs and tables representing relationships between variables and some discussions; @sec-discussion discusses findings from data visualization and implications.
+The remainder of this paper is structured as follows: @sec-data discusses the data with @sec-data_introduction includes basic information about data collection and cleaning results, and @sec-data_visualization includes graphs and tables representing relationships between variables and some discussions; @sec-discussion discusses findings and implications from data visualization as well as weaknesses and future work.
 
 # Data {#sec-data}
 
@@ -95,7 +95,7 @@ data |>
 
 @fig-yearly_count shows the total number of bicycle thefts in Toronto from 2014 to 2022. We could find that the total number of offence in a year increased before 2018 and began decrease since 2018. The change is relatively not significant within 1000, and the number of offence in 2022 is similar to that in 2014.
 
-@fig-yearly_count_by_month illustrates potential seasonal pattern that there are much fewer bicycle thefts in winter, eg. December, January, and February. The offence increases a lot in other seasons especially in summer, eg. June, July, and August. It also shows that the season in which bicycles were stolen differs from year to year, but overall centers in the summer seasons and the seasonal difference is significant.
+@fig-yearly_count_by_month illustrates potential seasonal pattern that there are much fewer bicycle thefts in winter, eg. December, January, and February. The offence increases a lot in other seasons especially in summer, eg. June, July, and August. It also shows that the season in which bicycles were stolen most differs from year to year, but overall centers in the summer seasons and the seasonal difference is significant.
 
 
 
@@ -114,7 +114,7 @@ data |>
   geom_line(linewidth = 0.5) +
   theme_minimal() +
   labs(x = "Occurrence month", y = "Number of Occurrence", color = "Occurence year") +
-  theme(axis.text.x=element_text(size=6.5)) 
+  theme(axis.text.x=element_text(size=6)) 
 ```
 
 Other than seasonal pattern, @tbl-location_count demonstrates the relationship between the location type and number of bicycle theft for each year. It clearly shows that bicycles were mostly stolen when parked outside, and this aligns with common sense that outdoor parking is more vulnerable to theft. However, it is surprising that the second most common location for bicycle theft is apartment instead of house. 
@@ -132,6 +132,8 @@ data |> group_by(location) |>
   summarise(n=n()) |>
   kable(col.names = c("Location type","Total number of occurrence"))
 ```
+
+
 ```{r}
 #| label: fig-location_count_by_year
 #| fig-cap: Yearly number of bicycle theft in different type of location in Toronto for each year from 2014 to 2022.
@@ -209,22 +211,43 @@ data |> group_by(occ_month) |>
 ```
 
 
+ 
+```{r}
+#| label: tbl-rate_by_location
+#| tbl-cap: Recovery rate of bicycle theft in Toronto from 2014 to 2022 for different location types
+#| echo: false
+#| warning: false
+#| message: false
+
+data |> group_by(location) |> 
+  summarise(rate = (percent(round(sum(bicycle_status == "RECOVERED")/nrow(data)*100,3)))) |> 
+  arrange(rate) |> 
+  kable(col.names = c("Location", "Recovery Rate"))
+
+```
+@tbl-rate_by_location shows the recovery rate of bicycle theft for different location types. We find that although bicycle thefts happen outside frequently as shown in @fig-location_count_by_year, these offences has the highest recovery rate. However, for bicycle thefts happened on transit, it is relatively hard to get the bicycle back.
+
+
 # Discussion {#sec-discussion}
 
-## Bicycle theft shows an overall decreasing trend in recent years
+## Bicycle theft shows an overall decreasing trend but low recovery rate in recent years
 
-In general, the data shows the overall trend of bicycle theft in Toronto decreased in recent year with potential seasonal pattern that more offence occurred in summer than in winter, and location pattern that outdoor theft decreased but indoor theft increased in recent year with @fig-yearly_count_by_month and @fig-location_count_by_year. Some implications about people's reporting habit and the overall recovery rate are delivered by @fig-diff_count_by_year, @tbl-rate_by_year, and @tbl-rate_by_month. Although the occurrence of bicycle theft decreased recently, bicycle theft is still common in Toronto and it is hard to get the stolen bikes successfully returned due to many factors such as lack of surveillance and ineffectiveness of tracking measures.
+In general, the data shows the overall trend of bicycle theft in Toronto decreased in recent years. Possible reasons include improvement of security equipment of the bike and influence of pandemic on both the market behind bicycle theft and people's habit of taking bikes. Although the occurrence of bicycle theft decreased recently, bicycle theft is still common in Toronto and it is hard to get the stolen bikes successfully returned due to many factors such as lack of surveillance and ineffectiveness of tracking measures.
 
-## Bicycle theft shows a seasonal pattern
+## Bicycle theft shows a seasonal pattern 
 
-Possible reasons include improvement of security equipment of the bike, the market behind bicycle theft influenced by pandemic, and people's usage habit of bike. These implications need more data to analyze and could be our further interest.
-
-
-This may be related to the weather in Toronto that many people will not ride bikes in winter due to extremely freezing weather and frequent snowfall.
+Bicycle theft in Toronto shows a seasonal pattern that more offences happened in summer seasons and fewer in winter. The seasonal difference is significant regardless of years. July used to be the season in which most bicycles were stolen across years. This may be related to the weather in Toronto that many people will not ride bikes in winter due to extremely freezing weather and frequent snowfall. However, the difference in total bicycle use is hard to track. The bicycles that were stolen in summer seasons, however, have a higher recovery rate comparing with 1.9% for winter seasons. A possible reason may also relate to weather that it is harder to track in extreme weathers. Also, it is noticeable that the total bicycle theft as well as possible total bicycle use in winter are both lower than that in summer, thus possibly making the rate to be low.
 
 ## Bicycle theft shows a geographical pattern
 
-Residents' transportation habits may be a possible reason that since apartments are usually located in the town center and close to public transportation stations, bicycles is a good choice for short trips. For residents in house, they may rather choose vehicles that are faster such as cars to commute.
+Bicycle theft in Toronto also shows a geographical pattern that bicycles parked outside are more likely to be stolen. For inside locations, apartment is the most common location that the bicycles were stolen. Residents' transportation habits may be a possible reason that since apartments are usually located in the town center and close to public transportation stations, bicycles is a good choice for short trips. For residents in house, they may rather choose vehicles that are faster such as cars to commute. For other types of locations, there may exist plausible difference in total bicycle use for different locations, which is also hard to track.
+
+
+## Weaknesses and future work
+
+One weakness of the paper is about data. Since bicycle thefts were self-reported, there exist reporting biases that the reporter may choose to hide or accidentally forget some information. Also, data about location was blurred due to privacy consideration. Additionally, the data is not up-to-date that it does not include data for 2023. Another point is that the total bicycle use in Toronto is missed so we could not compare the total bicycle use. This is critical for determining the geographical pattern of bicyle theft as mentioned above. It is plausible that people tend to use bicycle less in certain locations.
+
+Further work could focus on using more data and include look at other influencing factors contributing to bicycle theft such as bicycle types and brands. However, it could be helpful if the data is more credible than self-reporting. We may also look at possible factors behind the seasonal pattern and geographical pattern other than weather.
 
 \newpage
 
